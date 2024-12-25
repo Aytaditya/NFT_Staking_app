@@ -1,15 +1,97 @@
 'use client'
 
-import { useActiveAccount } from "thirdweb/react"
+import { TransactionButton, useActiveAccount, useReadContract } from "thirdweb/react"
 import { CuboidIcon as Cube } from 'lucide-react'
+import { claimTo, getNFTs, ownerOf, totalSupply } from "thirdweb/extensions/erc721"
+import { NFT_CONTRACT, STAKING_CONTRACT } from "../utils/contracts"
+import { useState } from "react"
+import { NFT } from "thirdweb"
+import { useEffect } from "react"
+import NFTCard from "./NFTCard"
 
 const Staking = () => {
   const account = useActiveAccount()
 
+  const [ownedNFTs, setOwnedNFTs] = useState<NFT[]>([])
+
+  const getOwnedNFTs = async () => {
+    let ownedNFTs:NFT[] = []
+    
+    const totalNftSupply = await totalSupply({
+        contract:NFT_CONTRACT
+    })
+
+    const nfts=await getNFTs({
+        contract:NFT_CONTRACT,
+        start:0,
+        count:parseInt(totalNftSupply.toString())
+    })
+    
+    for (let nft of nfts) {
+        const owner = await ownerOf({
+            contract: NFT_CONTRACT,
+            tokenId: nft.id,
+        });
+        if (owner === account?.address) {
+            ownedNFTs.push(nft);
+        }
+    }
+    setOwnedNFTs(ownedNFTs);
+  }
+  
+  useEffect(() => {
+    if(account) {
+        getOwnedNFTs();
+    }
+}, [account]);
+
+const {
+    data:stakedInfo,
+    refetch:refetchStakedInfo,
+}=useReadContract({
+    contract:STAKING_CONTRACT,
+    method:"getStakeInfo",
+    params:[account?.address || ""]
+})
+
   if (account) {
     return (
       <div className="bg-white/5 rounded-lg p-6 border border-white/10">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis accusamus nisi culpa laborum excepturi cum eius blanditiis minima odio dolore placeat quis, eveniet accusantium deserunt velit exercitationem dignissimos, laudantium consequuntur. Repellat quod saepe temporibus dolore distinctio impedit, fuga explicabo consequuntur. Impedit nulla neque doloribus ipsa iste dignissimos, sunt ea quibusdam porro atque beatae placeat soluta quos, natus fuga unde deleniti laboriosam quo. Quos dolore voluptatibus sequi minus suscipit asperiores ea, consectetur magni eveniet? Incidunt quos delectus quibusdam tempora, quasi quaerat recusandae non quae qui porro sed consequatur iure dicta praesentium deleniti distinctio iusto, dolorum blanditiis placeat voluptatum perferendis asperiores consequuntur nostrum neque. Itaque molestias quas placeat? Facilis, ex veniam? Eius cumque quaerat minus dolores dolor quia esse soluta, ipsa illo quos tempore impedit fugit placeat similique blanditiis dolorum tempora distinctio optio debitis voluptatem dolore itaque quisquam repellat? Fuga laudantium dolore, officiis ex cupiditate explicabo quasi eveniet quae magnam velit aliquid non reprehenderit praesentium tempora sint quis labore cumque corporis numquam ipsam. Non, quisquam libero dolorem reiciendis dolore aut in sunt ad, vero odit dolores praesentium ipsum tempore rerum animi consequuntur soluta delectus assumenda quos modi eveniet perspiciatis asperiores. Veniam tempora non quia cupiditate unde necessitatibus. Vel accusamus distinctio autem numquam, voluptatum libero mollitia commodi porro aliquid beatae accusantium eligendi nobis sed? Atque ea voluptatum at aliquam necessitatibus mollitia perspiciatis pariatur explicabo distinctio fugit repudiandae perferendis, eius quos modi! Molestiae nulla, distinctio laboriosam facilis perferendis tempora doloremque quod alias qui eaque est minima aperiam magnam animi ipsam sit expedita iusto aliquid dicta esse repellat blanditiis nobis. Itaque quod quis eaque sapiente tempore assumenda quas eum velit! Quaerat, harum possimus aliquam rem, ducimus nemo non expedita, perferendis veniam magnam excepturi repudiandae necessitatibus corporis dolorem aspernatur! Eum quo animi expedita, harum dicta, mollitia distinctio assumenda odit fugiat, aperiam corrupti error tenetur perferendis natus?
+        <div className="max-w-md flex justify-between ">
+            <h1 className="text-3xl  tracking-tighter">Claim NFT to Stake</h1>
+              <TransactionButton 
+              onTransactionConfirmed={()=>alert("NFT Claimed")}
+              transaction={()=>
+                claimTo({
+                  contract:NFT_CONTRACT,
+                  to:account?.address || "",
+                  quantity:BigInt(1),
+
+                }) 
+                
+              }>
+                  Claim NFT
+              </TransactionButton>
+        </div>
+            
+        <div className="mt-2">
+    <h1 className="text-xl flex justify-center mb-3 mt-12 font-semibold">Owned NFTs</h1>
+        <div className="mt-12 flex flex-row flex-wrap gap-4">
+        {ownedNFTs && ownedNFTs.length > 0 ? (
+            ownedNFTs.map((nft, index) => (
+                <div key={index} className="p-4  rounded-lg shadow-md">
+                    <NFTCard
+                        nft={nft}
+                        refetchOwnedNFTs={getOwnedNFTs}
+                        refetchStakedInfo={refetchStakedInfo}
+                    />
+                </div>
+            ))
+        ) : (
+            <p className="text-gray-500">Mint some NFTs, you don’t own any right now.</p>
+        )}
+    </div>
+      </div>
       </div>
     )
   }

@@ -1,8 +1,10 @@
-import { ConnectButton } from "thirdweb/react";
+import { ConnectButton, TransactionButton } from "thirdweb/react";
 import { client } from "./client";
 import { chain } from "./chain";
 import Staking from "../../components/Staking";
 import { Search, Plus, ChevronDown,Award} from 'lucide-react';
+import {claimTo} from 'thirdweb/extensions/erc721'
+import { NFT_CONTRACT } from "../../utils/contracts";
 
 export default function Home() {
   return (
@@ -57,6 +59,7 @@ export default function Home() {
                 <Plus className="w-4 h-4" />
                 <span>Add New</span>
               </button>
+              
             </div>
           </div>
           
