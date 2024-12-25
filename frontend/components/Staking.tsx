@@ -9,6 +9,7 @@ import { NFT } from "thirdweb"
 import { useEffect } from "react"
 import NFTCard from "./NFTCard"
 import StakedNFTCard from "./StakedNFTCard"
+import { StakeRewards } from "./StakeRewards"
 
 const Staking = () => {
   const account = useActiveAccount()
@@ -98,7 +99,6 @@ const {
 
 <div>
     <h1 className="title">Staked NFT's</h1>
-    
     <div className="nft-container">
     {stakedInfo && stakedInfo[0].length > 0 ? (
         stakedInfo[0].map((tokenId: bigint,index) => (
@@ -112,6 +112,10 @@ const {
     )}
     </div>
 </div>
+
+    <div>
+        <StakeRewards/>
+    </div>
 
       </div>
       </div>
@@ -130,7 +134,7 @@ const {
             <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center">
               <Cube className="w-4 h-4 text-purple-400" />
             </div>
-            <span className="text-sm text-gray-300">Stake your NFTs securely</span>
+            <span className="text-sm text-gray-300 mt-6">Stake your NFTs securely</span>
           </div>
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center">

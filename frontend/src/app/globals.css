@@ -58,3 +58,8 @@ body {
 .btn{
   padding-right: 24px;
 }
+
+.marginn{
+  gap: 16px;
+  justify-content: space-around;
+}
