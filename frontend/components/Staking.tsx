@@ -60,7 +60,10 @@ const {
         <div className="max-w-md flex justify-between ">
             <h1 className="text-3xl  tracking-tighter">Claim NFT to Stake</h1>
               <TransactionButton 
-              onTransactionConfirmed={()=>alert("NFT Claimed")}
+              onTransactionConfirmed={()=>{
+                alert("NFT Claimed")
+                getOwnedNFTs()
+            }}
               transaction={()=>
                 claimTo({
                   contract:NFT_CONTRACT,
@@ -75,22 +78,23 @@ const {
         </div>
             
         <div className="mt-2">
-    <h1 className="text-xl flex justify-center mb-3 mt-12 font-semibold">Owned NFTs</h1>
-        <div className="mt-12 flex flex-row flex-wrap gap-4">
-        {ownedNFTs && ownedNFTs.length > 0 ? (
-            ownedNFTs.map((nft, index) => (
-                <div key={index} className="p-4  rounded-lg shadow-md">
-                    <NFTCard
-                        nft={nft}
-                        refetchOwnedNFTs={getOwnedNFTs}
-                        refetchStakedInfo={refetchStakedInfo}
-                    />
-                </div>
-            ))
-        ) : (
-            <p className="text-gray-500">Mint some NFTs, you don’t own any right now.</p>
-        )}
-    </div>
+        <h1 className="title">Owned NFTs</h1>
+      <div className="nft-container">
+  {ownedNFTs && ownedNFTs.length > 0 ? (
+    ownedNFTs.map((nft, index) => (
+      <div key={index} className="nft-card">
+        <NFTCard
+          nft={nft}
+          refetchOwnedNFTs={getOwnedNFTs}
+          refetchStakedInfo={refetchStakedInfo}
+        />
+      </div>
+    ))
+  ) : (
+    <p className="text-gray-500">Mint some NFTs, you don’t own any right now.</p>
+  )}
+</div>
+
       </div>
       </div>
     )

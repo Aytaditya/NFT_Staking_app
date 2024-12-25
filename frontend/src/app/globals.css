@@ -19,3 +19,37 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.nft-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px; /* Adjust the gap between cards as needed */
+}
+
+.nft-card {
+  flex: 1 1 calc(33.333% - 16px); /* 3 cards per row with gap adjustment */
+  max-width: calc(33.333% - 16px);
+  box-sizing: border-box;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  font-size: 1.25rem; /* Equivalent to text-xl */
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem; /* Equivalent to mb-3 */
+  margin-top: 3rem; /* Equivalent to mt-12 */
+  font-weight: 600; /* Equivalent to font-semibold */
+}
+
+.nft-name {
+  font-weight: bold; /* Equivalent to font-bold */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5px; /* Equivalent to mt-3 */
+  padding-right: 26px;
+}
