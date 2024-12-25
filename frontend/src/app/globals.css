@@ -37,7 +37,7 @@ body {
 }
 
 .title {
-  font-size: 1.25rem; /* Equivalent to text-xl */
+  font-size: 1.55rem; /* Equivalent to text-xl */
   display: flex;
   justify-content: center;
   margin-bottom: 1rem; /* Equivalent to mb-3 */
@@ -52,4 +52,9 @@ body {
   justify-content: center;
   margin-top: 5px; /* Equivalent to mt-3 */
   padding-right: 26px;
+  margin-bottom: 3px;;
+}
+
+.btn{
+  padding-right: 24px;
 }
